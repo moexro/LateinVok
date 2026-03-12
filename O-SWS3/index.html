@@ -276,8 +276,7 @@ cursor: pointer;
 const ALL_CARDS = [
   // Vokabeln
   { latin: "eōdem", info: "Adv.", german: "dorthin" },
-  { latin: "error", info: "errōris m", german: "1 Irrtum, Zweifel\n2 Irrfahrt, Irrweg\nTod" },
-  { latin: "exitium", info: "", german: "Tod" },
+  { latin: "error", info: "errōris m", german: "1 Irrtum, Zweifel\n2 Irrfahrt, Irrweg" },
   { latin: "exsistere", info: "exsistō, exstitī", german: "hervorkommen" },
   { latin: "faciēs", info: "faciēī f", german: "Gesicht" },
   { latin: "fārī", info: "for, fātus sum", german: "sagen" },
@@ -293,6 +292,7 @@ const ALL_CARDS = [
   { latin: "frēnum", info: "", german: "Zügel" },
   { latin: "frīgus", info: "frīgoris n", german: "Kälte" },
   { latin: "frōns", info: "frondis f", german: "Laub" },
+  { latin: "frons", info: "frontis f", german: "Stirn" },
   { latin: "frūgēs", info: "frūgum Pl. f", german: "Früchte" },
   { latin: "fulmen", info: "fulminis n", german: "Blitz" },
   { latin: "gelidus", info: "a, um", german: "kalt" },
@@ -300,10 +300,14 @@ const ALL_CARDS = [
   { latin: "gener", info: "generī m", german: "Schwiegersohn" },
   { latin: "genitor", info: "genitōris m", german: "Vater" },
   { latin: "genū", info: "genūs n", german: "Knie" },
-  // Wortgruppen (links)
-  { latin: "Mord – Blut – Tod", info: "Wortgruppe", german: "exitium, mors, nex, cruor, sanguis, sepulcrum, tumulus" },
-  { latin: "faces / flumen", info: "Wortgruppe", german: "faces: Hals, Fackeln\nflumen: Blitz, Fluss" },
-  { latin: "frons, frontis", info: "Wortgruppe", german: "Stirn (v-Wort)" },
+  // Aus Wortgruppe Mord–Blut–Tod (die nicht schon oben vorkamen)
+  { latin: "exitium", info: "", german: "Tod, Verderben" },
+  { latin: "mors", info: "mortis f", german: "Tod" },
+  { latin: "nex", info: "necis f", german: "gewaltsamer Tod" },
+  { latin: "cruor", info: "cruōris m", german: "Blut" },
+  { latin: "sanguis", info: "sanguinis m", german: "Blut" },
+  { latin: "sepulcrum", info: "", german: "Grabmal" },
+  { latin: "tumulus", info: "", german: "(Grab-)Hügel" },
   // Wendungen
   { latin: "Oscula in os puellae figit", info: "Wendung", german: "Er drückt Küsse auf den Mund der Freundin." },
   { latin: "Stellae sub aethere fixae sunt", info: "Wendung", german: "Die Sterne haften am Himmel." },
@@ -350,7 +354,6 @@ function render() {
 
   const card = ALL_CARDS[deck[pos]];
   const isWendung = card.info === "Wendung";
-  const isWortgruppe = card.info === "Wortgruppe";
   const progress = Math.round((knownSet.size / ALL_CARDS.length) * 100);
   const totalLeft = (deck.length - pos) + repeatPool.length;
 
@@ -372,9 +375,8 @@ function render() {
       <div class="card" id="card">
         <div class="card-face card-front">
           ${isWendung ? '<div class="tag">Wendung</div>' : ''}
-          ${isWortgruppe ? '<div class="tag">Wortgruppe</div>' : ''}
           <div class="latin-word">${card.latin}</div>
-          ${card.info && !isWendung && !isWortgruppe ? `<div class="grammar-info">${card.info}</div>` : ''}
+          ${card.info && !isWendung ? `<div class="grammar-info">${card.info}</div>` : ''}
           <div class="tap-hint" id="tap-hint">Tippen zum Umdrehen</div>
         </div>
         <div class="card-face card-back">
