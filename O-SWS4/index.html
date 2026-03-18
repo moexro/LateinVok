@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ovid – Spezialwortschatz IV</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #110e08;
+    --gold: #c8861a;
+    --gold-light: #e8a832;
+    --parchment: #f5eed8;
+    --dark-card: #1e1508;
+    --muted: #7a6a4a;
+    --text: #1a1408;
+  }
+
+- { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html, body { background: #110e08 !important; color: #f5eed8 !important; }
+
+body {
+background: var(–bg);
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+align-items: center;
+font-family: ‘Cormorant Garamond’, Georgia, serif;
+padding: 28px 20px 40px;
+background-image: radial-gradient(ellipse at 20% 50%, #2a1a0522 0%, transparent 60%),
+radial-gradient(ellipse at 80% 20%, #c8861a0a 0%, transparent 50%);
+}
+
+header { text-align: center; margin-bottom: 24px; }
+
+.subtitle {
+font-family: ‘Cinzel’, serif;
+font-size: 10px;
+letter-spacing: 5px;
+color: var(–gold);
+text-transform: uppercase;
+margin-bottom: 8px;
+}
+
+h1 {
+font-family: ‘Cinzel’, serif;
+font-size: 22px;
+color: var(–parchment);
+font-weight: 600;
+letter-spacing: 2px;
+}
+
+.progress-wrap { width: 100%; max-width: 420px; margin-bottom: 16px; }
+
+.progress-labels {
+display: flex;
+justify-content: space-between;
+font-size: 11px;
+color: var(–muted);
+margin-bottom: 6px;
+font-family: ‘Cinzel’, serif;
+}
+
+.progress-bar-bg { height: 3px; background: #2a1f0a; border-radius: 2px; overflow: hidden; }
+
+.progress-bar {
+height: 100%;
+background: linear-gradient(90deg, var(–gold), var(–gold-light));
+border-radius: 2px;
+transition: width 0.5s ease;
+}
+
+.round-badge {
+height: 28px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-family: ‘Cinzel’, serif;
+font-size: 10px;
+letter-spacing: 3px;
+color: var(–gold);
+text-transform: uppercase;
+margin-bottom: 12px;
+}
+
+.scene {
+width: 100%;
+max-width: 420px;
+height: 260px;
+perspective: 1200px;
+cursor: pointer;
+flex-shrink: 0;
+}
+
+.card {
+position: relative;
+width: 100%;
+height: 260px;
+transform-style: preserve-3d;
+transition: transform 0.5s cubic-bezier(.4,0,.2,1);
+}
+
+.card.flipped { transform: rotateY(180deg); }
+
+.card-face {
+position: absolute;
+inset: 0;
+backface-visibility: hidden;
+-webkit-backface-visibility: hidden;
+border-radius: 18px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+padding: 36px 28px 48px;
+}
+
+.card-front {
+background: var(–parchment);
+box-shadow: 0 12px 50px #00000077, inset 0 1px 0 #ffffff66;
+border: 1px solid #d4c090;
+}
+
+.card-back {
+background: var(–dark-card);
+box-shadow: 0 12px 50px #00000077;
+border: 1px solid #3a2c10;
+transform: rotateY(180deg);
+}
+
+.tag {
+font-family: ‘Cinzel’, serif;
+font-size: 9px;
+letter-spacing: 3px;
+color: var(–gold);
+text-transform: uppercase;
+margin-bottom: 12px;
+border: 1px solid #c8861a44;
+padding: 3px 10px;
+border-radius: 20px;
+}
+
+.latin-word {
+font-size: 32px;
+font-weight: 600;
+font-style: italic;
+color: var(–text);
+text-align: center;
+line-height: 1.2;
+margin-bottom: 10px;
+}
+
+.grammar-info {
+font-size: 13px;
+color: var(–muted);
+font-style: italic;
+text-align: center;
+}
+
+.tap-hint {
+position: absolute;
+bottom: 16px;
+font-family: ‘Cinzel’, serif;
+font-size: 9px;
+letter-spacing: 3px;
+color: #bba87a44;
+text-transform: uppercase;
+transition: opacity 0.2s;
+}
+
+.back-latin {
+font-family: ‘Cinzel’, serif;
+font-size: 11px;
+color: var(–gold);
+letter-spacing: 2px;
+margin-bottom: 14px;
+font-style: italic;
+text-align: center;
+}
+
+.german-word {
+font-size: 24px;
+font-weight: 600;
+color: var(–parchment);
+text-align: center;
+line-height: 1.4;
+}
+
+.button-row {
+width: 100%;
+max-width: 420px;
+height: 56px;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 14px;
+margin-top: 20px;
+}
+
+.btn {
+font-family: ‘Cinzel’, serif;
+font-size: 13px;
+letter-spacing: 1px;
+border-radius: 10px;
+padding: 13px 26px;
+cursor: pointer;
+border: none;
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.25s ease, transform 0.1s;
+}
+
+.btn.visible { opacity: 1; pointer-events: all; }
+.btn:active { transform: scale(0.96); }
+.btn-nochmal { background: transparent; border: 2px solid #c0392b; color: #e74c3c; }
+.btn-gewusst { background: var(–gold); color: #fff; }
+
+.counter {
+height: 24px;
+display: flex;
+align-items: center;
+font-family: ‘Cinzel’, serif;
+font-size: 11px;
+color: #4a3a1a;
+letter-spacing: 1px;
+margin-top: 6px;
+}
+
+.done {
+background: var(–parchment);
+border-radius: 18px;
+padding: 48px 36px;
+max-width: 420px;
+width: 100%;
+text-align: center;
+box-shadow: 0 12px 50px #00000077;
+}
+
+.done-emoji { font-size: 44px; margin-bottom: 16px; }
+
+.done h2 {
+font-family: ‘Cinzel’, serif;
+font-size: 22px;
+color: var(–text);
+margin-bottom: 10px;
+}
+
+.done p { font-size: 16px; color: var(–muted); margin-bottom: 28px; }
+
+.btn-reset {
+font-family: ‘Cinzel’, serif;
+font-size: 14px;
+letter-spacing: 1px;
+background: var(–gold);
+color: #fff;
+padding: 14px 36px;
+border: none;
+border-radius: 10px;
+cursor: pointer;
+}
+</style>
+
+</head>
+<body>
+
+<header>
+  <div class="subtitle">Latein · Ovid</div>
+  <h1>Spezialwortschatz IV</h1>
+</header>
+
+<div id="app"></div>
+
+<script>
+const ALL_CARDS = [
+  { latin: "gignere", info: "gignō, genuī, genitum", german: "erzeugen, gebären" },
+  { latin: "hērēs", info: "hērēdis m", german: "Erbe" },
+  { latin: "heu", info: "", german: "ach" },
+  { latin: "immēnsus", info: "a, um", german: "unendlich, unermesslich" },
+  { latin: "imminēre", info: "immineō", german: "drohen" },
+  { latin: "immōtus", info: "a, um", german: "unbewegt" },
+  { latin: "incumbere", info: "incubō, incubuī m. Dat.", german: "sich stürzen auf/in" },
+  { latin: "inhibēre", info: "inhibeō", german: "hindern" },
+  { latin: "interdum", info: "Adv.", german: "manchmal" },
+  { latin: "laniāre", info: "laniō", german: "zerfleischen, zerreißen" },
+  { latin: "levāre", info: "levō", german: "erleichtern" },
+  { latin: "licet", info: "Subj.", german: "wenn auch" },
+  { latin: "līmes", info: "līmitis m", german: "Bahn, Weg" },
+  { latin: "lūna", info: "", german: "Mond" },
+  { latin: "māteria", info: "", german: "Nahrung, Stoff" },
+  { latin: "merēre", info: "mereō", german: "verdienen" },
+  { latin: "mītis", info: "e", german: "mild" },
+  { latin: "mōlēs", info: "mōlis f", german: "1 Mole\n2 Gewalt" },
+  { latin: "murmur", info: "murmuris n", german: "Flüstern, Murmeln" },
+  { latin: "nāta", info: "", german: "Tochter" },
+  { latin: "nefās", info: "n indekl.", german: "Unrecht (gegen Götter)" },
+  { latin: "nēquīquam", info: "Adv.", german: "vergeblich" },
+  { latin: "niger", info: "nigra, nigrum", german: "schwarz" },
+  { latin: "nitidus", info: "a, um", german: "glänzend" },
+  { latin: "novem", info: "", german: "neun" },
+  { latin: "aether", info: "", german: "Himmelsraum" },
+  { latin: "astrum", info: "", german: "Stern" },
+  { latin: "stella", info: "", german: "Stern" },
+  { latin: "sol", info: "", german: "Sonne" },
+  { latin: "nubes", info: "", german: "Wolke" },
+  { latin: "aër", info: "", german: "Luft" },
+  { latin: "aura", info: "", german: "Gunst, Luft" },
+  { latin: "spatium", info: "", german: "Raum, Strecke, Zeitraum" },
+  { latin: "polus", info: "", german: "Pol" },
+  { latin: "tellus", info: "", german: "Erde" },
+  { latin: "ignarus", info: "", german: "ohne Kenntnis, unwissend" },
+  { latin: "infelix", info: "", german: "unglücklich" },
+  { latin: "quamquam", info: "Konj.", german: "obwohl; freilich" },
+  { latin: "cum", info: "Konj.", german: "als; nachdem; weil;\nobwohl; während" },
+];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+let deck = [], repeatPool = [], knownSet = new Set(), pos = 0, flipped = false, round = 1;
+
+function init() {
+  deck = shuffle(ALL_CARDS.map((_, i) => i));
+  repeatPool = []; knownSet = new Set(); pos = 0; flipped = false; round = 1;
+  render();
+}
+
+function render() {
+  const app = document.getElementById('app');
+
+  if (knownSet.size === ALL_CARDS.length) {
+    app.innerHTML = `
+      <div class="done">
+        <div class="done-emoji">🏛️</div>
+        <h2>Alle gewusst!</h2>
+        <p>Alle ${ALL_CARDS.length} Karten gemeistert.</p>
+        <button class="btn-reset" onclick="init()">Neu starten</button>
+      </div>`;
+    return;
+  }
+
+  if (pos >= deck.length) {
+    deck = shuffle(repeatPool);
+    repeatPool = []; pos = 0; round++; flipped = false;
+  }
+
+  const card = ALL_CARDS[deck[pos]];
+  const isWendung = card.info === "Wendung";
+  const progress = Math.round((knownSet.size / ALL_CARDS.length) * 100);
+  const totalLeft = (deck.length - pos) + repeatPool.length;
+
+  app.innerHTML = `
+    <div class="progress-wrap">
+      <div class="progress-labels">
+        <span>✓ ${knownSet.size} gewusst</span>
+        <span>${totalLeft} verbleibend</span>
+        <span>✗ ${repeatPool.length} wiederholen</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar" style="width:${progress}%"></div>
+      </div>
+    </div>
+
+    <div class="round-badge">${round > 1 ? `Wiederholung · Runde ${round}` : '&nbsp;'}</div>
+
+    <div class="scene" id="scene">
+      <div class="card" id="card">
+        <div class="card-face card-front">
+          ${isWendung ? '<div class="tag">Wendung</div>' : ''}
+          <div class="latin-word">${card.latin}</div>
+          ${card.info && !isWendung ? `<div class="grammar-info">${card.info}</div>` : ''}
+          <div class="tap-hint" id="tap-hint">Tippen zum Umdrehen</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="back-latin">${card.latin}</div>
+          <div class="german-word">${card.german.replace(/\n/g, '<br>')}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="button-row">
+      <button class="btn btn-nochmal" id="btn-n">✗ Nochmal</button>
+      <button class="btn btn-gewusst" id="btn-g">✓ Gewusst</button>
+    </div>
+
+    <div class="counter" id="counter">Karte ${pos + 1} von ${deck.length}</div>
+  `;
+
+  document.getElementById('scene').addEventListener('click', flipCard);
+  document.getElementById('btn-n').addEventListener('click', e => { e.stopPropagation(); answer(false); });
+  document.getElementById('btn-g').addEventListener('click', e => { e.stopPropagation(); answer(true); });
+}
+
+function flipCard() {
+  if (flipped) return;
+  flipped = true;
+  document.getElementById('card').classList.add('flipped');
+  document.getElementById('btn-n').classList.add('visible');
+  document.getElementById('btn-g').classList.add('visible');
+  const hint = document.getElementById('tap-hint');
+  if (hint) hint.style.opacity = '0';
+}
+
+function answer(correct) {
+  if (correct) knownSet.add(deck[pos]);
+  else repeatPool.push(deck[pos]);
+  pos++; flipped = false;
+  render();
+}
+
+init();
+</script>
+
+</body>
+</html>
