@@ -1,0 +1,53 @@
+[
+  { "latin": "nūbēs", "info": "nūbis f", "german": "Wolke" },
+  {
+    "latin": "obnoxius",
+    "info": "a, um",
+    "german": "unterworfen, verpflichtet"
+  },
+  {
+    "latin": "obstāre",
+    "info": "obstō, obstitī",
+    "german": "hinderlich sein,\nim Weg stehen"
+  },
+  { "latin": "ōmen", "info": "ōminis n", "german": "(Vor-)Zeichen" },
+  { "latin": "ōsculum", "info": "", "german": "Kuss" },
+  { "latin": "palūs", "info": "palūdis f", "german": "Sumpf" },
+  { "latin": "paries", "info": "parietis m", "german": "Wand" },
+  {
+    "latin": "pāscere",
+    "info": "pāscō, pāvī, pāstum m. Abl.",
+    "german": "erfreuen"
+  },
+  { "latin": "pelagus", "info": "pelagī n", "german": "Meer, See" },
+  {
+    "latin": "penātēs",
+    "info": "penātium Pl. m",
+    "german": "Penaten (Hausgötter)"
+  },
+  { "latin": "pendēre", "info": "pendeō, pependī", "german": "(herab)hängen" },
+  { "latin": "penitus", "info": "Adv.", "german": "tief (hinein)" },
+  { "latin": "penna", "info": "", "german": "Feder, Flügel" },
+  {
+    "latin": "peragere",
+    "info": "peragō, perēgī, perāctum",
+    "german": "(durch)leben, ausführen"
+  },
+  { "latin": "pignus", "info": "pignoris n", "german": "Pfand" },
+  { "latin": "piscis", "info": "piscis m", "german": "Fisch" },
+  { "latin": "poēta", "info": "m", "german": "Dichter" },
+  { "latin": "polus", "info": "", "german": "Pol" },
+  { "latin": "pondus", "info": "ponderis n", "german": "Gewicht" },
+  { "latin": "pontus", "info": "", "german": "Meer" },
+  {
+    "latin": "prōdīre",
+    "info": "prōdeō, prōdiī",
+    "german": "da sein, hervortreten"
+  },
+  {
+    "latin": "prōgeniēs",
+    "info": "prōgeniēī f",
+    "german": "Nachkommenschaft, Sohn"
+  },
+  { "latin": "prōlēs", "info": "prōlis f", "german": "Nachkommenschaft, Sohn" }
+]
