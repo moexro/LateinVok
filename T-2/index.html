@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sallust – 2. Test (LW 1 + LW 3 + LW 6)</title>
+<style>
+  :root {
+    --color-bg: #f5f5f0;
+    --color-bg-card: #ffffff;
+    --color-bg-secondary: #f5f5f0;
+    --color-text-primary: #1a1a1a;
+    --color-text-secondary: #666666;
+    --color-text-muted: #999999;
+    --color-text-hint: #aaaaaa;
+    --color-border: #dddddd;
+    --color-border-light: #e0ddd6;
+    --color-accent-blue: #185FA5;
+    --color-accent-red: #b87470;
+    --color-btn-border: #cccccc;
+    --color-correct-border: #3B6D11;
+    --color-correct-text: #3B6D11;
+    --color-correct-bg: #EAF3DE;
+    --color-wrong-border: #A32D2D;
+    --color-wrong-text: #A32D2D;
+    --color-wrong-bg: #FCEBEB;
+    --color-score-good: #3B6D11;
+    --color-score-ok: #BA7517;
+    --color-score-low: #A32D2D;
+    --color-hover-bg: #f0ede6;
+    --radius-card: 12px;
+    --radius-btn: 8px;
+    --radius-badge: 4px;
+    --radius-extra: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: system-ui, sans-serif;
+    background: var(--color-bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1rem;
+    color: var(--color-text-primary);
+  }
+
+  #app {
+    width: 100%;
+    max-width: 620px;
+  }
+
+  h1 {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    color: var(--color-text-primary);
+  }
+
+  .subtitle {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    margin-bottom: 1.5rem;
+  }
+
+  /* Filter buttons */
+  .filter-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    padding: 5px 14px;
+    border-radius: 99px;
+    border: 1px solid var(--color-btn-border);
+    background: var(--color-bg-card);
+    color: var(--color-text-secondary);
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+
+  .filter-btn.active {
+    background: var(--color-text-primary);
+    color: var(--color-bg-card);
+    border-color: var(--color-text-primary);
+  }
+
+  .filter-btn:hover:not(.active) {
+    background: var(--color-hover-bg);
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .stat {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+  }
+
+  .stat span {
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+
+  .progress-bar {
+    height: 5px;
+    background: var(--color-border-light);
+    border-radius: 99px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--color-accent-blue);
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+
+  .card-area {
+    perspective: 1000px;
+    margin-bottom: 1rem;
+  }
+
+  .card {
+    width: 100%;
+    min-height: 240px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease;
+    cursor: pointer;
+    border-radius: var(--radius-card);
+  }
+
+  .card.flipped {
+    transform: rotateY(180deg);
+  }
+
+  .card-face {
+    position: absolute;
+    width: 100%;
+    min-height: 240px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: var(--radius-card);
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-card);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .card-back {
+    transform: rotateY(180deg);
+  }
+
+  .card-label {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1rem;
+  }
+
+  .card-term {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    font-style: italic;
+    line-height: 1.35;
+  }
+
+  .card-meta {
+    font-size: 14px;
+    color: #888888;
+    margin-top: 4px;
+  }
+
+  .card-hint {
+    font-size: 13px;
+    color: var(--color-text-hint);
+    margin-top: 1rem;
+  }
+
+  .card-translation {
+    font-size: 20px;
+    color: var(--color-text-primary);
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+  }
+
+  .card-extra {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    padding: 8px 14px;
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-extra);
+    margin-top: 6px;
+  }
+
+  .card-lw-badge {
+    display: inline-block;
+    font-size: 11px;
+    background: var(--color-accent-red);
+    color: #ffffff;
+    border-radius: var(--radius-badge);
+    padding: 2px 8px;
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+    font-style: normal;
+  }
+
+  .hint {
+    font-size: 13px;
+    color: var(--color-text-hint);
+    text-align: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+
+  button {
+    padding: 10px 24px;
+    border-radius: var(--radius-btn);
+    border: 1px solid var(--color-btn-border);
+    background: var(--color-bg-card);
+    color: var(--color-text-primary);
+    font-size: 15px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+  }
+
+  button:hover {
+    background: var(--color-hover-bg);
+  }
+
+  .btn-correct {
+    border-color: var(--color-correct-border);
+    color: var(--color-correct-text);
+  }
+
+  .btn-correct:hover {
+    background: var(--color-correct-bg);
+  }
+
+  .btn-wrong {
+    border-color: var(--color-wrong-border);
+    color: var(--color-wrong-text);
+  }
+
+  .btn-wrong:hover {
+    background: var(--color-wrong-bg);
+  }
+
+  .result-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: 2.5rem;
+    text-align: center;
+  }
+
+  .result-title {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+
+  .result-score {
+    font-size: 64px;
+    font-weight: 500;
+    margin: 0.5rem 0;
+  }
+
+  .result-label {
+    font-size: 15px;
+    color: var(--color-text-secondary);
+    margin-bottom: 2rem;
+  }
+
+  .score-good { color: var(--color-score-good); }
+  .score-ok   { color: var(--color-score-ok); }
+  .score-low  { color: var(--color-score-low); }
+
+  .metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 2rem;
+  }
+
+  .metric {
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-btn);
+    padding: 14px;
+    text-align: left;
+  }
+
+  .metric-val {
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  .metric-lbl {
+    font-size: 12px;
+    color: #888888;
+    margin-top: 2px;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <h1>Sallust, Catilina – 2. Test</h1>
+  <p class="subtitle">LW 1, LW 3 &amp; LW 6 · <span id="card-count">0</span> Karten</p>
+
+  <div class="filter-row">
+    <button class="filter-btn active" onclick="setFilter('all', this)">Alle</button>
+    <button class="filter-btn" onclick="setFilter('lw1', this)">Nur LW 1</button>
+    <button class="filter-btn" onclick="setFilter('lw3', this)">Nur LW 3</button>
+    <button class="filter-btn" onclick="setFilter('lw6', this)">Nur LW 6</button>
+  </div>
+
+  <div id="learn-view">
+    <div class="header">
+      <div class="stat">Runde <span id="round-num">1</span></div>
+      <div class="stat">Verbleibend: <span id="remaining">0</span></div>
+      <div class="stat">Gewusst: <span id="known-count">0</span> / <span id="total-count">0</span></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+
+    <div class="card-area">
+      <div class="card" id="card" onclick="flipCard()">
+        <div class="card-face card-front">
+          <div class="card-label">Lateinisch</div>
+          <div class="card-term" id="term"></div>
+          <div class="card-meta" id="meta"></div>
+          <div class="card-hint">Tippe zum Aufdecken</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-label">Deutsch</div>
+          <div id="lw-badge"></div>
+          <div class="card-translation" id="translation"></div>
+          <div class="card-extra" id="extra" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="hint" id="flip-hint">Karte antippen zum Aufdecken</p>
+    <div class="btn-row" id="answer-row" style="display:none">
+      <button class="btn-wrong" onclick="answer(false)">&#10007; Nicht gewusst</button>
+      <button class="btn-correct" onclick="answer(true)">&#10003; Gewusst</button>
+    </div>
+    <div class="btn-row" id="flip-row">
+      <button onclick="flipCard()">Aufdecken</button>
+    </div>
+  </div>
+
+  <div id="result-view" style="display:none">
+    <div class="result-card">
+      <div class="result-title">Geschafft! &#127881;</div>
+      <div class="result-score" id="score-pct"></div>
+      <div class="result-label">beim ersten Durchgang richtig</div>
+      <div class="metrics">
+        <div class="metric"><div class="metric-val" id="m-correct"></div><div class="metric-lbl">1. Versuch richtig</div></div>
+        <div class="metric"><div class="metric-val" id="m-total"></div><div class="metric-lbl">Karten gesamt</div></div>
+        <div class="metric"><div class="metric-val" id="m-rounds"></div><div class="metric-lbl">Runden gebraucht</div></div>
+        <div class="metric"><div class="metric-val" id="m-wrong"></div><div class="metric-lbl">Mehrfach wiederholt</div></div>
+      </div>
+      <button onclick="restart()">Nochmal &#8634;</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var allCards = [
+  // ── LW 1 ──────────────────────────────────────────────────────────────
+  { term: "pax, pacis", meta: "f", translation: "der Frieden", lw: "lw1" },
+  { term: "tametsi", meta: "Konj.", translation: "obwohl", lw: "lw1" },
+  { term: "gloria", meta: "f", translation: "der Ruhm, die Ehre", lw: "lw1" },
+  { term: "res gestae", meta: "f Pl.", translation: "die Taten", lw: "lw1" },
+  { term: "invidia", meta: "f", translation: "der Neid", lw: "lw1" },
+  { term: "aequus, a, um", meta: "Adj.", translation: "eben, gerecht, gleich", lw: "lw1" },
+  { term: "adversus, a, um", meta: "Adj.", translation: "entgegengesetzt, feindlich", lw: "lw1" },
+  { term: "audacia", meta: "f", translation: "die Frechheit, die Kuhnheit", lw: "lw1" },
+  { term: "avaritia", meta: "f", translation: "die Habgier, der Geiz", lw: "lw1" },
+  { term: "arduus, a, um", meta: "Adj.", translation: "schwer; steil" },
+  { term: "dehinc", meta: "Adv.", translation: "hierauf" },
+  { term: "abstinentia", meta: "f", translation: "die Uneigennuetzigkeit; die Enthaltsamkeit", extra: "Abstinenz" },
+  { term: "vigere", meta: "Verb", translation: "(vor)herrschen; stark sein" },
+  { term: "imbecillus, a, um", meta: "Adj.", translation: "schwach, anfaellig" },
+  { term: "ambitio, onis", meta: "f", translation: "der Ehrgeiz", extra: "Ambition" },
+  { term: "cupido, inis", meta: "f", translation: "die Begierde; die Gier", extra: "cupidus, cupere" },
+  { term: "vexare", meta: "Verb", translation: "quaelen, heimsuchen" },
+
+  // ── LW 3 ──────────────────────────────────────────────────────────────
+  { term: "ingenium", meta: "n", translation: "die Begabung, das Talent", lw: "lw3" },
+  { term: "caedes, is", meta: "f", translation: "das Blutbad, der Mord", lw: "lw3" },
+  { term: "gratus, a, um", meta: "Adj.", translation: "dankbar, willkommen, beliebt", lw: "lw3" },
+  { term: "vastus, a, um", meta: "Adj.", translation: "riesig; ode, verwustet", lw: "lw3" },
+  { term: "nimis", meta: "Adv.", translation: "(all)zu, (all)zu sehr", lw: "lw3" },
+  { term: "altus, a, um", meta: "Adj.", translation: "hoch, tief", lw: "lw3" },
+  { term: "inopia", meta: "f", translation: "der Mangel, die Not", lw: "lw3" },
+  { term: "adulescentia", meta: "f", translation: "die Jugendzeit", extra: "adulescens | it. adolescenza" },
+  { term: "discordia", meta: "f", translation: "die Uneinigkeit, die Spaltung", extra: "cor" },
+  { term: "civilis, e", meta: "Adj.", translation: "burgerlich", extra: "civis | zivil" },
+  { term: "patiens, ntis", meta: "Adj. (m. Gen.)", translation: "fahig, etw. zu ertragen", extra: "pati | Patient, Passiv" },
+  { term: "eloquentia", meta: "f", translation: "die Redekunst", extra: "loqui | eloquent" },
+  { term: "sapientia", meta: "f", translation: "die Klugheit, die Weisheit", extra: "sapere" },
+  { term: "dominatio, onis", meta: "f", translation: "die Gewaltherrschaft", extra: "dominus, domina | dominant" },
+  { term: "invadere, invado, invasi, invasum", meta: "Verb", translation: "eindringen, angreifen", extra: "Invasion" },
+  { term: "in dies", meta: "Ausdruck", translation: "von Tag zu Tag" },
+  { term: "ferox, ocis", meta: "Adj.", translation: "wild, ungestum", extra: "ferus" },
+  { term: "res familiaris", meta: "f", translation: "das Vermogen", extra: "familia, familiaris" },
+  { term: "conscientia", meta: "f", translation: "das (Schuld-)Bewusstsein", extra: "scire | conscious" },
+  { term: "incitare", meta: "Verb", translation: "antreiben, anfeuern" },
+  { term: "luxuria", meta: "f", translation: "die Genusssucht, der Uberfluss", extra: "Luxus | luxury" },
+
+  // ── LW 6 ──────────────────────────────────────────────────────────────
+  { term: "corrumpere, corrumpo, corrupi, corruptum", meta: "Verb", translation: "bestechen, verderben", lw: "lw6" },
+  { term: "flagitium", meta: "n", translation: "die Gemeinheit, die Schandtat", lw: "lw6" },
+  { term: "facinus, oris", meta: "n", translation: "die Handlung, die Untat", lw: "lw6" },
+  { term: "bonum", meta: "n", translation: "das Gut, das Gute", lw: "lw6" },
+  { term: "aes alienum, aeris alieni", meta: "n", translation: "die Schulden", lw: "lw6" },
+  { term: "iudicium", meta: "n", translation: "das Gericht, das Urteil", lw: "lw6" },
+  { term: "sanguis, inis", meta: "m", translation: "das Blut", lw: "lw6" },
+  { term: "postremo", meta: "Adv.", translation: "kurz (gesagt); schliesslich", lw: "lw6" },
+  { term: "familiaris, e", meta: "Adj. / Subst.", translation: "freundschaftlich, vertraut; der Freund", lw: "lw6" },
+  { term: "adulter, adulteri", meta: "m", translation: "der Ehebrecher" },
+  { term: "venter, ventris", meta: "m", translation: "der Bauch", extra: "it. ventre | fr. ventre" },
+  { term: "penis, is", meta: "m", translation: "der Penis" },
+  { term: "redimere, redimo, redemi, redemptum", meta: "Verb", translation: "freikaufen, loskaufen (von etw.)", extra: "emere" },
+  { term: "convincere, convinco, convici, convictum", meta: "Verb", translation: "(gerichtlich) uberfuhren", extra: "vincere" },
+  { term: "egestas, atis", meta: "f", translation: "die Armut; die Not" },
+  { term: "vacuus, a, um", meta: "Adj.", translation: "leer, frei", extra: "Vakuum | vacant" },
+  { term: "incidere, incido, incidi", meta: "Verb", translation: "in etw. geraten; vorfallen, sich zutragen", extra: "in, cadere | Inzidenz" },
+  { term: "co(t)tidianus, a, um", meta: "Adj.", translation: "taglich", extra: "dies" },
+  { term: "familiaritas, atis", meta: "f", translation: "die Freundschaft", extra: "familiaris" },
+  { term: "modestia", meta: "f", translation: "die Massigung, die Bescheidenheit", extra: "modus" },
+  { term: "fidus, a, um", meta: "Adj.", translation: "treu, zuverlassig", extra: "fides" },
+  { term: "pudicitia", meta: "f", translation: "die Sittsamkeit, die Keuschheit", extra: "pudor" }
+];
+
+var activeFilter = "all";
+var cards = [];
+var queue = [], firstTry = {}, known = new Set(), round = 1, flipped = false, current = null;
+var total = 0;
+
+function setFilter(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll(".filter-btn").forEach(function(b) { b.classList.remove("active"); });
+  btn.classList.add("active");
+  restart();
+}
+
+function getFilteredCards() {
+  if (activeFilter === "all") return allCards.slice();
+  return allCards.filter(function(c) { return c.lw === activeFilter || (activeFilter === "lw3" && !c.lw); return false; });
+}
+
+function getFilteredCardsProper() {
+  if (activeFilter === "all") return allCards.slice();
+  if (activeFilter === "lw3") return allCards.filter(function(c) { return !c.lw || c.lw === "lw3"; });
+  if (activeFilter === "lw6") return allCards.filter(function(c) { return c.lw === "lw6" || (!c.lw && allCards.indexOf(c) >= 21); });
+  return allCards.slice();
+}
+
+function shuffle(a) {
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+function restart() {
+  if (activeFilter === "lw1") cards = shuffle(allCards.filter(function(c) { return c.lw === "lw1" || (!c.lw && allCards.indexOf(c) < 17); }));
+  else if (activeFilter === "lw3") cards = shuffle(allCards.filter(function(c) { return c.lw === "lw3" || (!c.lw && allCards.indexOf(c) >= 17 && allCards.indexOf(c) < 38); }));
+  else if (activeFilter === "lw6") cards = shuffle(allCards.filter(function(c) { return c.lw === "lw6" || (!c.lw && allCards.indexOf(c) >= 38); }));
+  else cards = shuffle(allCards.slice());
+
+  queue = cards.slice();
+  firstTry = {};
+  known = new Set();
+  round = 1;
+  total = cards.length;
+  document.getElementById("card-count").textContent = total;
+  document.getElementById("result-view").style.display = "none";
+  document.getElementById("learn-view").style.display = "block";
+  showNext();
+}
+
+function showNext() {
+  if (queue.length === 0) { showResult(); return; }
+  current = queue[0];
+  flipped = false;
+  document.getElementById("card").classList.remove("flipped");
+  document.getElementById("term").textContent = current.term;
+  document.getElementById("meta").textContent = current.meta || "";
+  document.getElementById("translation").textContent = current.translation;
+
+  var badge = document.getElementById("lw-badge");
+  if (current.lw === "lw1") {
+    badge.innerHTML = '<span class="card-lw-badge">LW 1</span>';
+  } else if (current.lw === "lw3") {
+    badge.innerHTML = '<span class="card-lw-badge">LW 3</span>';
+  } else if (current.lw === "lw6") {
+    badge.innerHTML = '<span class="card-lw-badge">LW 6</span>';
+  } else {
+    badge.innerHTML = "";
+  }
+
+  var extra = document.getElementById("extra");
+  if (current.extra) {
+    extra.textContent = current.extra;
+    extra.style.display = "block";
+  } else {
+    extra.style.display = "none";
+  }
+
+  document.getElementById("answer-row").style.display = "none";
+  document.getElementById("flip-row").style.display = "flex";
+  document.getElementById("flip-hint").style.display = "block";
+  updateStats();
+}
+
+function flipCard() {
+  if (!flipped) {
+    document.getElementById("card").classList.add("flipped");
+    flipped = true;
+    document.getElementById("answer-row").style.display = "flex";
+    document.getElementById("flip-row").style.display = "none";
+    document.getElementById("flip-hint").style.display = "none";
+  }
+}
+
+function answer(correct) {
+  if (!flipped) return;
+  var t = current.term;
+  if (!(t in firstTry)) firstTry[t] = correct;
+  queue.shift();
+  if (correct) {
+    known.add(t);
+  } else {
+    queue.push(current);
+  }
+  if (queue.length === 0 && known.size < total) {
+    round++;
+    queue = shuffle(cards.filter(function(c) { return !known.has(c.term); }));
+  }
+  showNext();
+}
+
+function updateStats() {
+  document.getElementById("round-num").textContent = round;
+  document.getElementById("remaining").textContent = queue.length;
+  document.getElementById("known-count").textContent = known.size;
+  document.getElementById("total-count").textContent = total;
+  document.getElementById("progress").style.width = Math.round((known.size / total) * 100) + "%";
+}
+
+function showResult() {
+  var fc = Object.values(firstTry).filter(Boolean).length;
+  var pct = Math.round((fc / total) * 100);
+  document.getElementById("learn-view").style.display = "none";
+  document.getElementById("result-view").style.display = "block";
+  var s = document.getElementById("score-pct");
+  s.textContent = pct + "%";
+  s.className = "result-score " + (pct >= 80 ? "score-good" : pct >= 50 ? "score-ok" : "score-low");
+  document.getElementById("m-correct").textContent = fc;
+  document.getElementById("m-total").textContent = total;
+  document.getElementById("m-rounds").textContent = round;
+  document.getElementById("m-wrong").textContent = Object.values(firstTry).filter(function(v) { return !v; }).length;
+}
+
+restart();
+</script>
+</body>
+</html>
