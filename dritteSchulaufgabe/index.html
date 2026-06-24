@@ -523,16 +523,8 @@
             }
             frontContent += '<div class="flip-hint">zum Umdrehen klicken</div>';
 
-            var backContent = '<div class="card-translation">' + card.translation + '</div>';
-            if (card.extra) {
-                backContent += '<div class="card-extra">' + card.extra + '</div>';
-            }
-            if (card.lw) {
-                backContent += '<div class="card-badge">' + card.lw.toUpperCase() + '</div>';
-            }
-
             document.getElementById('card-content-front').innerHTML = frontContent;
-            document.getElementById('card-content-back').innerHTML = backContent;
+            document.getElementById('card-content-back').innerHTML = ''; // Wird erst beim Flip gefüllt
 
             document.getElementById('current-card').textContent = currentIndex + 1;
 
@@ -541,7 +533,26 @@
 
         function flipCard() {
             var cardEl = document.getElementById('card');
+            if (!cardEl.classList.contains('flipped')) {
+                // Rückseite füllen BEVOR umgedreht wird (wie in T-2)
+                fillCardBack();
+            }
             cardEl.classList.toggle('flipped');
+        }
+
+        function fillCardBack() {
+            if (filteredCards.length === 0) return;
+            var card = filteredCards[currentIndex];
+
+            var backContent = '<div class="card-translation">' + card.translation + '</div>';
+            if (card.extra) {
+                backContent += '<div class="card-extra">' + card.extra + '</div>';
+            }
+            if (card.lw) {
+                backContent += '<div class="card-badge">' + card.lw.toUpperCase() + '</div>';
+            }
+
+            document.getElementById('card-content-back').innerHTML = backContent;
         }
 
         function markCorrect() {
