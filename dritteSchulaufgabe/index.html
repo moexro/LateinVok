@@ -490,6 +490,15 @@
         var currentFilter = 'all';
         var learned = {};
         var sessionStats = {};
+        var wrongCards = [];
+
+        function shuffle(a) {
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
 
         function updateCardCount() {
             document.getElementById('card-count').textContent = filteredCards.length;
@@ -510,6 +519,10 @@
                 });
             }
 
+            filteredCards = shuffle(filteredCards);
+
+
+
             updateCardCount();
             renderCard();
 
@@ -523,10 +536,6 @@
         }
 
         function renderCard() {
-            if (filteredCards.length === 0) {
-                document.getElementById('card-content-front').innerHTML = '<p>Keine Karten</p>';
-                return;
-            }
 
             var card = filteredCards[currentIndex];
             var cardEl = document.getElementById('card');
@@ -584,17 +593,29 @@
         function markIncorrect() {
             if (filteredCards.length === 0) return;
             sessionStats[currentIndex] = 'incorrect';
+            wrongCards.push(filteredCards[currentIndex]);
             nextCard();
         }
 
         function nextCard() {
-            currentIndex++;
-            if (currentIndex >= filteredCards.length) {
-                showEndScreen();
-            } else {
-                renderCard();
-            }
+    currentIndex++;
+
+    if (currentIndex >= filteredCards.length) {
+
+        // Alle Karten dieser Runde geschafft
+        if (wrongCards.length === 0) {
+            showEndScreen();
+            return;
         }
+
+        // Neue Runde nur mit den falsch beantworteten Karten
+        filteredCards = shuffle(wrongCards.slice());
+        wrongCards = [];
+        currentIndex = 0;
+    }
+
+    renderCard();
+}
 
         function updateStats() {
             var correct = 0;
@@ -622,16 +643,9 @@
             var total = currentIndex;
             var percentage = total > 0 ? Math.round((correct / total) * 100) : 0;
 
-            var message = 'Schulaufgabe abgeschlossen!<br>' +
-                          '<strong>' + correct + ' von ' + total + ' korrekt (' + percentage + '%)</strong>';
+            var message = 'Lernen abgeschlossen!<br>';
 
-            if (percentage === 100) {
-                message += '<br><em>Perfekt!</em>';
-            } else if (percentage >= 80) {
-                message += '<br><em>Sehr gut!</em>';
-            } else if (percentage >= 60) {
-                message += '<br><em>Ganz Ordentlich!</em>';
-            }
+          
 
             document.getElementById('card-content-front').innerHTML = 
                 '<div style="text-align: center; font-size: 20px; color: white;">' + message + '</div>';
@@ -641,6 +655,8 @@
             var cardEl = document.getElementById('card');
             cardEl.classList.remove('flipped');
             document.getElementById('current-card').textContent = total;
+
+        
         }
 
         // Initialisieren
